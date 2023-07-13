@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
+import Button from './Button/Button';
+import Modal from './Modal/Modal';
+import Loader from './Loader/Loader';
 import styles from './App.css';
 
 class App extends Component {
@@ -15,7 +18,7 @@ class App extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.query !== this.state.query) {
+    if (prevState.page !== this.state.page) {
       this.fetchImages();
     }
   }
@@ -38,7 +41,6 @@ class App extends Component {
 
         this.setState(prevState => ({
           images: [...prevState.images, ...hits],
-          page: prevState.page + 1,
         }));
       })
       .catch(error => this.setState({ error }))
@@ -54,7 +56,9 @@ class App extends Component {
   };
 
   handleLoadMore = () => {
-    this.fetchImages();
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+    }));
   };
 
   render() {
@@ -63,17 +67,14 @@ class App extends Component {
     return (
       <div className={styles.app}>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        <ImageGallery
-          images={images}
-          onImageClick={this.handleImageClick}
-          onLoadMore={this.handleLoadMore}
-        />
-        {loading && <div>Loading...</div>}
+        <ImageGallery images={images} onImageClick={this.handleImageClick} />
+        {loading && <Loader />}
+        {images.length > 0 && <Button onClick={this.handleLoadMore} />}
         {showModal && (
-          <div>
+          <Modal onClose={this.handleCloseModal}>
             <img src={selectedImage} alt="" />
             <button onClick={this.handleCloseModal}>Close</button>
-          </div>
+          </Modal>
         )}
       </div>
     );

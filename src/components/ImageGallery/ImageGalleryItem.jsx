@@ -7,7 +7,7 @@ const ImageGalleryItem = ({ image, onClick }) => {
     <li className={styles.galleryItem}>
       <img
         src={image.webformatURL}
-        alt=""
+        alt={image.tags}
         className={styles.image}
         onClick={onClick}
       />
@@ -18,6 +18,7 @@ const ImageGalleryItem = ({ image, onClick }) => {
 ImageGalleryItem.propTypes = {
   image: PropTypes.shape({
     webformatURL: PropTypes.string.isRequired,
+    tags: PropTypes.string.isRequired,
   }).isRequired,
   onClick: PropTypes.func.isRequired,
 };
