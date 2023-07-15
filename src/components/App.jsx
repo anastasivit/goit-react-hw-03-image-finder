@@ -18,10 +18,9 @@ class App extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    if (
-      prevState.page !== this.state.page ||
-      prevState.query !== this.state.query
-    ) {
+    const { page, query } = this.state;
+
+    if (prevState.page !== page || prevState.query !== query) {
       this.fetchImages();
     }
   }
@@ -70,9 +69,13 @@ class App extends Component {
     return (
       <div className={styles.app}>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        <ImageGallery images={images} onImageClick={this.handleImageClick} />
+        {images.length > 0 && (
+          <ImageGallery images={images} onImageClick={this.handleImageClick} />
+        )}
         {loading && <Loader />}
-        {images.length > 0 && <Button onClick={this.handleLoadMore} />}
+        {!loading && images.length > 0 && (
+          <Button onClick={this.handleLoadMore} />
+        )}
         {showModal && (
           <Modal onClose={this.handleCloseModal}>
             <img src={selectedImage} alt="" />
